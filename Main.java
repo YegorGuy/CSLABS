@@ -7,6 +7,7 @@ public class Main {
     public static void main(String[] args) {
         sortExample();
         randomExample();
+        timingExample();
     }
 
     // Q3: Try both ascending and descending sorts.
@@ -65,6 +66,25 @@ public class Main {
         System.out.printf(java.util.Locale.US,
                 "Bonus: expected mean = 0; sample mean = %.6f; within 3 standard errors = %b%n",
                 average, Math.abs(average) <= 3 * standardError);
+    }
+
+    // Q5: Only the summation is inside the timed interval.
+    private static void timingExample() {
+        double avgTimeMs = 0.0;
+        int n = 3;
+        for (int i = 0; i < n; i++) {
+            long startTime = System.nanoTime();
+            float sum = 0.0F;
+            for (int j = 0; j < 1000000; j++) {
+                sum += 0.000001F;
+            }
+            long endTime = System.nanoTime();
+            long diffTime = endTime - startTime;
+            System.out.println("sum = " + sum);
+            avgTimeMs += diffTime / 1000000.0;
+        }
+        avgTimeMs /= n;
+        System.out.printf(java.util.Locale.US, "Average time: %.6f ms%n", avgTimeMs);
     }
 
     // Iterator traversal also checks a LinkedList in O(n) time.
