@@ -8,6 +8,8 @@ public class Main {
         sortExample();
         randomExample();
         timingExample();
+        shopExample();
+        resortExample();
     }
 
     // Q3: Try both ascending and descending sorts.
@@ -85,6 +87,49 @@ public class Main {
         }
         avgTimeMs /= n;
         System.out.printf(java.util.Locale.US, "Average time: %.6f ms%n", avgTimeMs);
+    }
+
+    private static void shopExample() {
+        ArrayList<Repair> repairs = new ArrayList<>();
+        repairs.add(new Repair(1, "Replace tire", 85.00));
+        repairs.add(new Repair(2, "Change oil", 45.00));
+        repairs.add(new Repair(3, "Replace brakes", 200.00));
+        Shop shop = new Shop(repairs);
+        System.out.println("Shop repairs:");
+        for (Repair repair : shop.getRepairs()) {
+            System.out.println(repair);
+        }
+        System.out.printf(java.util.Locale.US, "Total repair cost: $%.2f%n", shop.getTotalCost());
+    }
+
+    // Additional learning objective: repeatedly add to a sorted list and re-sort.
+    private static void resortExample() {
+        Random prng = new Random(1622L);
+        int additions = 25;
+        for (int n : new int[] {1000, 10000, 100000}) {
+            ArrayList<Integer> data = new ArrayList<>(n + additions);
+            for (int i = 0; i < n; i++) {
+                data.add(prng.nextInt());
+            }
+            Collections.sort(data);
+            long totalNanos = 0;
+            for (int i = 0; i < additions; i++) {
+                int value = prng.nextInt();
+                long start = System.nanoTime();
+                data.add(value);
+                Collections.sort(data);
+                totalNanos += System.nanoTime() - start;
+                if (!isSorted(data)) {
+                    throw new IllegalStateException("Re-sort failed");
+                }
+            }
+            if (data.size() != n + additions) {
+                throw new IllegalStateException("Wrong size after additions");
+            }
+            System.out.printf(java.util.Locale.US,
+                    "Add + re-sort: starting N=%d, additions=%d, average=%.6f ms%n",
+                    n, additions, totalNanos / 1000000.0 / additions);
+        }
     }
 
     // Iterator traversal also checks a LinkedList in O(n) time.
