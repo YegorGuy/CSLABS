@@ -1,0 +1,14 @@
+Heap limit bytes: 536870912
+Phase: generating 1000 LinkedList values
+Phase: sorting
+Phase: searching
+TRIAL,LinkedList,1000,1,0.443400,0.012500
+Phase: generating 1000 LinkedList values
+Phase: sorting
+Phase: searching
+TRIAL,LinkedList,1000,2,0.295000,0.013600
+Phase: generating 1000 LinkedList values
+Phase: sorting
+Phase: searching
+TRIAL,LinkedList,1000,3,0.257400,0.008100
+RESULT,LinkedList,1000,3,0.331933,0.011400,OK

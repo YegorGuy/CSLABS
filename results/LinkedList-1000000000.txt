@@ -1,0 +1,3 @@
+Heap limit bytes: 536870912
+Phase: generating 1000000000 LinkedList values
+Terminating due to java.lang.OutOfMemoryError: Java heap space

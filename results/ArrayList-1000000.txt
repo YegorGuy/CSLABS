@@ -1,0 +1,14 @@
+Heap limit bytes: 536870912
+Phase: generating 1000000 ArrayList values
+Phase: sorting
+Phase: searching
+TRIAL,ArrayList,1000000,1,330.813000,0.027800
+Phase: generating 1000000 ArrayList values
+Phase: sorting
+Phase: searching
+TRIAL,ArrayList,1000000,2,506.814400,0.027300
+Phase: generating 1000000 ArrayList values
+Phase: sorting
+Phase: searching
+TRIAL,ArrayList,1000000,3,342.892100,0.064800
+RESULT,ArrayList,1000000,3,393.506500,0.039967,OK

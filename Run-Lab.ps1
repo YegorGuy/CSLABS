@@ -12,9 +12,10 @@ try {
     New-Item -ItemType Directory -Path results -Force | Out-Null
     & javac -Xlint:all -d build Main.java Repair.java Shop.java ListBenchmark.java
     if ($LASTEXITCODE -ne 0) { throw 'Compilation failed.' }
-    & java -cp build Main | Tee-Object -FilePath results\examples.txt
+    & java -cp build Main | ForEach-Object { Write-Host $_; $_ } |
+        Set-Content -Encoding UTF8 results\examples.txt
     if ($LASTEXITCODE -ne 0) { throw 'Examples failed.' }
-    & java -version 2>&1 | Out-File results\java-version.txt
+    & java --version | Set-Content -Encoding UTF8 results\java-version.txt
     "Heap=$Heap; repetitions=$Repetitions; timeout=$TimeoutSeconds seconds; date=$(Get-Date -Format o)" |
         Set-Content results\settings.txt
     'type,n,completed_trials,sort_ms,search_ms,status' | Set-Content results\timings.csv
@@ -41,7 +42,7 @@ try {
                 $process.WaitForExit()
             }
             $log = $stdoutTask.Result + $stderrTask.Result
-            $log | Set-Content "results\$type-$n.txt"
+            $log | Set-Content -NoNewline "results\$type-$n.txt"
             $resultLine = @($log -split '\r?\n' | Where-Object { $_.StartsWith('RESULT,') })
             if ($finished -and $process.ExitCode -eq 0 -and $resultLine.Count -eq 1) {
                 $row = $resultLine[0].Substring(7)
