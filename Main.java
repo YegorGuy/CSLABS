@@ -43,4 +43,18 @@ public class Main {
         }
         return true;
     }
+
+    
+    public static void repairShopDemo() {
+        ArrayList<Repair> repairs = new ArrayList<>();
+
+        repairs.add(new Repair(1, "Oil change", 50));
+        repairs.add(new Repair(2, "Tire repair", 30));
+        repairs.add(new Repair(3, "Brake repair", 150));
+
+        Shop shop = new Shop(repairs);
+        shop.showRepairs();
+    }
+
+    repairShopDemo();
 }
