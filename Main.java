@@ -1,10 +1,12 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
         sortExample();
+        randomExample();
     }
 
     // Q3: Try both ascending and descending sorts.
@@ -34,6 +36,35 @@ public class Main {
             }
         }
         System.out.println("Descending: " + data + "; sorted = true");
+    }
+
+    // Q4 and bonus: count the values and compare their mean with zero.
+    private static void randomExample() {
+        ArrayList<Float> sourceData = new ArrayList<>();
+        Random prng = new Random(1622L);
+        int n = 1000;
+        for (int i = 0; i < n; i++) {
+            sourceData.add(prng.nextFloat(-1000.0F, 1000.0F));
+        }
+
+        if (sourceData.size() != n) {
+            throw new IllegalStateException("Wrong number of random values");
+        }
+        System.out.println("Random count: " + sourceData.size() + "; expected: " + n);
+
+        double total = 0.0;
+        for (float value : sourceData) {
+            if (value < -1000.0F || value >= 1000.0F) {
+                throw new IllegalStateException("Random value outside requested range");
+            }
+            total += value;
+        }
+        double average = total / sourceData.size();
+        // Uniform [-1000, 1000) has mean 0 and standard deviation 1000/sqrt(3).
+        double standardError = 1000.0 / Math.sqrt(3.0 * n);
+        System.out.printf(java.util.Locale.US,
+                "Bonus: expected mean = 0; sample mean = %.6f; within 3 standard errors = %b%n",
+                average, Math.abs(average) <= 3 * standardError);
     }
 
     // Iterator traversal also checks a LinkedList in O(n) time.
