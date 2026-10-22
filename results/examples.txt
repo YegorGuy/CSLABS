@@ -1,16 +1,13 @@
-Ascending: [3, 13, 32]; sorted = true
-Descending: [32, 13, 3]; sorted = true
-Random count: 1000; expected: 1000
-Bonus: expected mean = 0; sample mean = 39.482311; within 3 standard errors = true
-sum = 1.0090389
-sum = 1.0090389
-sum = 1.0090389
-Average time: 3.276333 ms
-Shop repairs:
-1: Replace tire ($85.00)
-2: Change oil ($45.00)
-3: Replace brakes ($200.00)
-Total repair cost: $330.00
-Add + re-sort: starting N=1000, additions=25, average=0.046800 ms
-Add + re-sort: starting N=10000, additions=25, average=0.067448 ms
-Add + re-sort: starting N=100000, additions=25, average=0.358112 ms
+[3, 13, 32], sorted: true
+Correct count: true
+Average (expected near 0): 39.48231121826172
+Sum: 1.0090389
+Sum: 1.0090389
+Sum: 1.0090389
+Average time (ms): 3.1293333333333333
+1: Replace tire ($85.0)
+2: Change oil ($45.0)
+3: Replace brakes ($200.0)
+Add and re-sort, N=1000: 0.058608 ms
+Add and re-sort, N=10000: 0.06622 ms
+Add and re-sort, N=100000: 0.9053960000000002 ms

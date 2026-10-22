@@ -1,14 +1,1 @@
-Heap limit bytes: 536870912
-Phase: generating 100000 ArrayList values
-Phase: sorting
-Phase: searching
-TRIAL,ArrayList,100000,1,44.710000,0.016100
-Phase: generating 100000 ArrayList values
-Phase: sorting
-Phase: searching
-TRIAL,ArrayList,100000,2,23.395100,0.012200
-Phase: generating 100000 ArrayList values
-Phase: sorting
-Phase: searching
-TRIAL,ArrayList,100000,3,18.923300,0.014200
-RESULT,ArrayList,100000,3,29.009467,0.014167,OK
+ArrayList,100000,34.540033333333334,0.018133333333333335,true,true,OK

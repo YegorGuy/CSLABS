@@ -1,21 +1,15 @@
 import java.util.ArrayList;
 
 public class Shop {
-    private final ArrayList<Repair> repairs;
+    private ArrayList<Repair> repairs;
 
     public Shop(ArrayList<Repair> repairs) {
-        this.repairs = new ArrayList<>(repairs);
+        this.repairs = repairs;
     }
 
-    public ArrayList<Repair> getRepairs() {
-        return new ArrayList<>(repairs);
-    }
-
-    public double getTotalCost() {
-        double total = 0.0;
+    public void showRepairs() {
         for (Repair repair : repairs) {
-            total += repair.getCost();
+            System.out.println(repair);
         }
-        return total;
     }
 }

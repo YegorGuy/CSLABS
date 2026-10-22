@@ -1,67 +1,20 @@
-param(
-    [string]$Heap = '512m',
-    [int]$Repetitions = 3,
-    [int]$TimeoutSeconds = 120,
-    [int[]]$Sizes = @(1000, 100000, 1000000, 10000000, 100000000, 1000000000, 2000000000)
-)
+Set-Location $PSScriptRoot
+New-Item -ItemType Directory -Path results -Force | Out-Null
+javac Main.java Repair.java Shop.java ListBenchmark.java
+if ($LASTEXITCODE -ne 0) { throw 'Compilation failed' }
+$examples = java Main
+$examples
+$examples | Set-Content results\examples.txt
+java --version | Set-Content results\java-version.txt
+'Heap: 512 MiB. Three trials per successful case. No warm-up.' | Set-Content results\settings.txt
 
-$ErrorActionPreference = 'Stop'
-Push-Location -LiteralPath $PSScriptRoot
-try {
-    New-Item -ItemType Directory -Path build -Force | Out-Null
-    New-Item -ItemType Directory -Path results -Force | Out-Null
-    & javac -Xlint:all -d build Main.java Repair.java Shop.java ListBenchmark.java
-    if ($LASTEXITCODE -ne 0) { throw 'Compilation failed.' }
-    & java -cp build Main | ForEach-Object { Write-Host $_; $_ } |
-        Set-Content -Encoding UTF8 results\examples.txt
-    if ($LASTEXITCODE -ne 0) { throw 'Examples failed.' }
-    & java --version | Set-Content -Encoding UTF8 results\java-version.txt
-    "Heap=$Heap; repetitions=$Repetitions; timeout=$TimeoutSeconds seconds; date=$(Get-Date -Format o)" |
-        Set-Content results\settings.txt
-    'type,n,completed_trials,sort_ms,search_ms,status' | Set-Content results\timings.csv
-
-    foreach ($type in @('ArrayList', 'LinkedList')) {
-        foreach ($n in $Sizes) {
-            Write-Host "Running $type N=$n ..."
-            $startInfo = New-Object System.Diagnostics.ProcessStartInfo
-            $startInfo.FileName = (Get-Command java).Source
-            $startInfo.Arguments = "-Xmx$Heap -XX:+ExitOnOutOfMemoryError -cp build ListBenchmark $type $n $Repetitions"
-            $startInfo.WorkingDirectory = $PSScriptRoot
-            $startInfo.UseShellExecute = $false
-            $startInfo.CreateNoWindow = $true
-            $startInfo.RedirectStandardOutput = $true
-            $startInfo.RedirectStandardError = $true
-            $process = New-Object System.Diagnostics.Process
-            $process.StartInfo = $startInfo
-            [void]$process.Start()
-            $stdoutTask = $process.StandardOutput.ReadToEndAsync()
-            $stderrTask = $process.StandardError.ReadToEndAsync()
-            $finished = $process.WaitForExit($TimeoutSeconds * 1000)
-            if (-not $finished) {
-                $process.Kill()
-                $process.WaitForExit()
-            }
-            $log = $stdoutTask.Result + $stderrTask.Result
-            $log | Set-Content -NoNewline "results\$type-$n.txt"
-            $resultLine = @($log -split '\r?\n' | Where-Object { $_.StartsWith('RESULT,') })
-            if ($finished -and $process.ExitCode -eq 0 -and $resultLine.Count -eq 1) {
-                $row = $resultLine[0].Substring(7)
-            } else {
-                $completed = @($log -split '\r?\n' | Where-Object { $_.StartsWith('TRIAL,') }).Count
-                if (-not $finished) {
-                    $status = 'TIMEOUT'
-                } elseif ($log -match 'OutOfMemoryError') {
-                    $status = 'OUT_OF_MEMORY'
-                } else {
-                    throw "Unexpected benchmark failure: $type N=$n. Read results\$type-$n.txt"
-                }
-                $row = "$type,$n,$completed,,,$status"
-            }
-            $row | Add-Content results\timings.csv
-            Write-Host $row
-            $process.Dispose()
-        }
+'type,n,sort_ms,search_ms,sorted,found,status' | Set-Content results\timings.csv
+foreach ($type in @('ArrayList', 'LinkedList')) {
+    foreach ($n in @(1000, 100000, 1000000, 10000000, 100000000, 1000000000, 2000000000)) {
+        $row = java -Xmx512m ListBenchmark $type $n
+        if ($LASTEXITCODE -ne 0) { throw "Failed: $type N=$n" }
+        $row | Set-Content "results\$type-$n.txt"
+        $row | Add-Content results\timings.csv
+        Write-Host $row
     }
-} finally {
-    Pop-Location
 }

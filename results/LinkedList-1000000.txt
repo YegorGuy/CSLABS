@@ -1,14 +1,1 @@
-Heap limit bytes: 536870912
-Phase: generating 1000000 LinkedList values
-Phase: sorting
-Phase: searching
-TRIAL,LinkedList,1000000,1,794.511100,10.458700
-Phase: generating 1000000 LinkedList values
-Phase: sorting
-Phase: searching
-TRIAL,LinkedList,1000000,2,640.428000,17.171900
-Phase: generating 1000000 LinkedList values
-Phase: sorting
-Phase: searching
-TRIAL,LinkedList,1000000,3,556.523800,8.513600
-RESULT,LinkedList,1000000,3,663.820967,12.048067,OK
+LinkedList,1000000,764.1436333333335,11.192599999999999,true,true,OK

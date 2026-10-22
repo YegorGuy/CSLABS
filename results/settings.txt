@@ -1,1 +1,1 @@
-Heap=512m; repetitions=3; timeout=120 seconds; date=2026-10-22T14:35:23.3995633-05:00
+Heap: 512 MiB. Three trials per successful case. No warm-up.

@@ -5,141 +5,77 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
-        sortExample();
-        randomExample();
-        timingExample();
-        shopExample();
-        resortExample();
-    }
-
-    // Q3: Try both ascending and descending sorts.
-    private static void sortExample() {
+        // Q3: Sort and check the order.
         ArrayList<Integer> data = new ArrayList<>();
         data.add(13);
         data.add(3);
         data.add(32);
         Collections.sort(data);
+        System.out.println(data + ", sorted: " + isSorted(data));
 
-        boolean sorted = true;
-        for (int i = 1; i < data.size(); i++) {
-            if (data.get(i - 1) > data.get(i)) {
-                sorted = false;
-                break;
-            }
-        }
-        System.out.println("Ascending: " + data + "; sorted = " + sorted);
-        if (!sorted) {
-            throw new IllegalStateException("Ascending sort failed");
-        }
-
-        Collections.sort(data, Collections.reverseOrder());
-        for (int i = 1; i < data.size(); i++) {
-            if (data.get(i - 1) < data.get(i)) {
-                throw new IllegalStateException("Descending sort failed");
-            }
-        }
-        System.out.println("Descending: " + data + "; sorted = true");
-    }
-
-    // Q4 and bonus: count the values and compare their mean with zero.
-    private static void randomExample() {
-        ArrayList<Float> sourceData = new ArrayList<>();
-        Random prng = new Random(1622L);
+        // Q4 and bonus: Generate 1000 numbers, count them, and find the average.
+        Random random = new Random(1622);
+        ArrayList<Float> numbers = new ArrayList<>();
         int n = 1000;
         for (int i = 0; i < n; i++) {
-            sourceData.add(prng.nextFloat(-1000.0F, 1000.0F));
+            numbers.add(random.nextFloat(-1000.0F, 1000.0F));
         }
-
-        if (sourceData.size() != n) {
-            throw new IllegalStateException("Wrong number of random values");
-        }
-        System.out.println("Random count: " + sourceData.size() + "; expected: " + n);
-
-        double total = 0.0;
-        for (float value : sourceData) {
-            if (value < -1000.0F || value >= 1000.0F) {
-                throw new IllegalStateException("Random value outside requested range");
-            }
+        System.out.println("Correct count: " + (numbers.size() == n));
+        double total = 0;
+        for (float value : numbers) {
             total += value;
         }
-        double average = total / sourceData.size();
-        // Uniform [-1000, 1000) has mean 0 and standard deviation 1000/sqrt(3).
-        double standardError = 1000.0 / Math.sqrt(3.0 * n);
-        System.out.printf(java.util.Locale.US,
-                "Bonus: expected mean = 0; sample mean = %.6f; within 3 standard errors = %b%n",
-                average, Math.abs(average) <= 3 * standardError);
-    }
+        System.out.println("Average (expected near 0): " + total / n);
 
-    // Q5: Only the summation is inside the timed interval.
-    private static void timingExample() {
-        double avgTimeMs = 0.0;
-        int n = 3;
-        for (int i = 0; i < n; i++) {
-            long startTime = System.nanoTime();
+        // Q5: Time the sum three times.
+        double averageTime = 0;
+        for (int i = 0; i < 3; i++) {
+            long start = System.nanoTime();
             float sum = 0.0F;
             for (int j = 0; j < 1000000; j++) {
                 sum += 0.000001F;
             }
-            long endTime = System.nanoTime();
-            long diffTime = endTime - startTime;
-            System.out.println("sum = " + sum);
-            avgTimeMs += diffTime / 1000000.0;
+            long end = System.nanoTime();
+            averageTime += (end - start) / 1000000.0;
+            System.out.println("Sum: " + sum);
         }
-        avgTimeMs /= n;
-        System.out.printf(java.util.Locale.US, "Average time: %.6f ms%n", avgTimeMs);
-    }
+        System.out.println("Average time (ms): " + averageTime / 3);
 
-    private static void shopExample() {
+        // Pass an ArrayList of repairs to the Shop constructor.
         ArrayList<Repair> repairs = new ArrayList<>();
         repairs.add(new Repair(1, "Replace tire", 85.00));
         repairs.add(new Repair(2, "Change oil", 45.00));
         repairs.add(new Repair(3, "Replace brakes", 200.00));
         Shop shop = new Shop(repairs);
-        System.out.println("Shop repairs:");
-        for (Repair repair : shop.getRepairs()) {
-            System.out.println(repair);
-        }
-        System.out.printf(java.util.Locale.US, "Total repair cost: $%.2f%n", shop.getTotalCost());
-    }
+        shop.showRepairs();
 
-    // Additional learning objective: repeatedly add to a sorted list and re-sort.
-    private static void resortExample() {
-        Random prng = new Random(1622L);
-        int additions = 25;
-        for (int n : new int[] {1000, 10000, 100000}) {
-            ArrayList<Integer> data = new ArrayList<>(n + additions);
-            for (int i = 0; i < n; i++) {
-                data.add(prng.nextInt());
+        // Add one value to a sorted list and re-sort, 25 times.
+        for (int size : new int[] {1000, 10000, 100000}) {
+            ArrayList<Integer> values = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                values.add(random.nextInt());
             }
-            Collections.sort(data);
-            long totalNanos = 0;
-            for (int i = 0; i < additions; i++) {
-                int value = prng.nextInt();
+            Collections.sort(values);
+            double time = 0;
+            for (int i = 0; i < 25; i++) {
+                int value = random.nextInt();
                 long start = System.nanoTime();
-                data.add(value);
-                Collections.sort(data);
-                totalNanos += System.nanoTime() - start;
-                if (!isSorted(data)) {
-                    throw new IllegalStateException("Re-sort failed");
-                }
+                values.add(value);
+                Collections.sort(values);
+                time += (System.nanoTime() - start) / 1000000.0;
             }
-            if (data.size() != n + additions) {
-                throw new IllegalStateException("Wrong size after additions");
-            }
-            System.out.printf(java.util.Locale.US,
-                    "Add + re-sort: starting N=%d, additions=%d, average=%.6f ms%n",
-                    n, additions, totalNanos / 1000000.0 / additions);
+            System.out.println("Add and re-sort, N=" + size + ": " + time / 25 + " ms");
         }
     }
 
-    // Iterator traversal also checks a LinkedList in O(n) time.
+    // A for-each loop works efficiently for both ArrayList and LinkedList.
     public static boolean isSorted(List<Integer> data) {
-        Integer previous = null;
-        for (Integer current : data) {
-            if (previous != null && previous > current) {
+        int previous = Integer.MIN_VALUE;
+        for (int value : data) {
+            if (value < previous) {
                 return false;
             }
-            previous = current;
+            previous = value;
         }
         return true;
     }
