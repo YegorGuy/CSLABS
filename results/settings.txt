@@ -1,1 +1,0 @@
-Heap: 512 MiB. Three trials per successful case. No warm-up.

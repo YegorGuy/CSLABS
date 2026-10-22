@@ -1,6 +1,0 @@
-*.class
-build/
-*.hprof
-hs_err_pid*
-.idea/
-.vscode/

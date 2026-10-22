@@ -1,1 +1,0 @@
-LinkedList,10000000,28073.6633,330.4934,true,true,OK
