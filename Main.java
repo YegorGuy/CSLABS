@@ -57,4 +57,28 @@ public class Main {
     }
 
     repairShopDemo();
+
+    
+    public static void timingTest() {
+        double averageTime = 0;
+
+        for (int i = 0; i < 3; i++) {
+            long start = System.nanoTime();
+
+            float sum = 0.0F;
+            for (int j = 0; j < 1000000; j++) {
+                sum += 0.000001F;
+            }
+
+            long end = System.nanoTime();
+
+            averageTime += (end - start) / 1000000.0;
+            System.out.println("Sum: " + sum);
+        }
+
+        System.out.println("Average time: " + averageTime / 3 + " ms");
+    }
+
+    timingTest();
+
 }
